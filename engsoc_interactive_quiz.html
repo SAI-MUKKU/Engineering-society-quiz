@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ENGsoc Ultimate Engineering Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0b0f3b, #1c2a6d);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #app {
+      width: 90%;
+      max-width: 700px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1s ease;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+    }
+    .answers button {
+      width: 100%;
+      padding: 15px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      margin: 8px 0;
+      border-radius: 10px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .answers button:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    #nextBtn {
+      margin-top: 15px;
+      width: 100%;
+      padding: 15px;
+      background: #00c8ff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+    #nextBtn:hover {
+      background: #009cd1;
+    }
+    .hidden {
+      display: none;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🔥 ENGsoc Engineering Mega Quiz 🔥</h1>
+    <h2 id="question">Loading...</h2>
+    <div class="answers" id="answers"></div>
+    <button id="nextBtn" class="hidden">Next Question →</button>
+  </div>
+
+  <script>
+    const quiz = [
+      {
+        q: "Which engineering discipline sent the first object to Mars?",
+        options: ["Aerospace", "Mechanical", "Electrical", "Chemical"],
+        correct: 0
+      },
+      {
+        q: "What phenomenon allows planes to stay in the air?",
+        options: ["Magnus effect", "Thermal expansion", "Lift from pressure differences", "Gyroscopic stability"],
+        correct: 2
+      },
+      {
+        q: "Which material is stronger than steel but lighter than aluminium?",
+        options: ["Titanium", "Carbon fibre", "Graphene", "Kevlar"],
+        correct: 1
+      },
+      {
+        q: "What does a capacitor *actually* store?",
+        options: ["Voltage", "Electric charge", "Magnetic flux", "Current"],
+        correct: 1
+      },
+      {
+        q: "What’s the tallest man‑made structure on Earth?",
+        options: ["Shanghai Tower", "Merdeka 118", "Burj Khalifa", "Tokyo Skytree"],
+        correct: 2
+      },
+      {
+        q: "Which engine cycle is used in most petrol cars?",
+        options: ["Otto cycle", "Brayton cycle", "Diesel cycle", "Rankine cycle"],
+        correct: 0
+      },
+      {
+        q: "What ratio is used to describe how easily a material stretches?",
+        options: ["Poisson's ratio", "Young's modulus", "Shear modulus", "Stress ratio"],
+        correct: 1
+      },
+      {
+        q: "What percentage of the universe is dark matter + dark energy?",
+        options: ["20%", "48%", "72%", "~95%"],
+        correct: 3
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    const qEl = document.getElementById("question");
+    const ansEl = document.getElementById("answers");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function loadQuestion() {
+      const q = quiz[current];
+      qEl.textContent = q.q;
+      ansEl.innerHTML = "";
+      nextBtn.classList.add("hidden");
+
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => select(i);
+        ansEl.appendChild(btn);
+      });
+    }
+
+    function select(i) {
+      const correct = quiz[current].correct;
+      const buttons = ansEl.querySelectorAll("button");
+
+      buttons.forEach((b, idx) => {
+        b.style.background = idx === correct ? "#2ecc71" : "#e74c3c";
+        b.disabled = true;
+      });
+
+      if (i === correct) score++;
+      nextBtn.classList.remove("hidden");
+    }
+
+    nextBtn.onclick = () => {
+      current++;
+      if (current < quiz.length) loadQuestion();
+      else endQuiz();
+    };
+
+    function endQuiz() {
+      qEl.textContent = `🎉 Quiz Complete! You scored ${score}/${quiz.length}! 🎉`;
+      ansEl.innerHTML = "";
+      nextBtn.classList.add("hidden");
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
